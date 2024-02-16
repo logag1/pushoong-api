@@ -1,0 +1,14 @@
+{
+  "name": "pushoong-api",
+  "version": "1.0.0",
+  "description": "Unofficial Pushoong API Wrapper",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "gagol",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/axios": "^0.14.0"
+  }
+}
