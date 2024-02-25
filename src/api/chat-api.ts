@@ -85,4 +85,65 @@ export class ChatApiHandler {
 
     return { success: res.status === 200, result: res.data }
   }
+
+  /**
+   * 
+   * @param pk 삭제할 답장의 pk값
+   */
+  async deleteAnswer(pk: string): Promise<RequestType> {
+    await this._handleCsrf();
+
+    const res = await this._client.post('/delete_answer', {
+      csrfmiddlewaretoken: this._csrfMiddlewareToken,
+      pk: pk
+    },
+      {
+        headers: {
+          referer: this.referer,
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        }
+      }
+    );
+
+    return { success: res.status === 200, result: res.data }
+  }
+
+  /**
+   * ASK 방을 잠급니다
+   */
+  async lockRoom(password: string): Promise<{ success: boolean }> {
+    await this._handleCsrf();
+
+    const res = await this._client.postForm(`/update_security/${this._code}`, {
+      csrfmiddlewaretoken: this._csrfMiddlewareToken,
+      is_private: 'on',
+      password
+    }, {
+      headers: {
+        'Content-Type': `multipart/form-data`,
+        'Referer': this.referer
+      }
+    });
+
+    return { success: res.status === 200 }
+  }
+
+  /**
+   * 잠긴방을 우회합니다
+   */
+  async unlockRoom(): Promise<{ success: boolean }> {
+    await this._handleCsrf();
+
+    const res = await this._client.postForm(`/update_security/${this._code}`, {
+      csrfmiddlewaretoken: this._csrfMiddlewareToken,
+      password: ''
+    }, {
+      headers: {
+        'Content-Type': `multipart/form-data`,
+        'Referer': this.referer
+      }
+    });
+
+    return { success: res.status === 200 }
+  }
 }
